@@ -1,0 +1,36 @@
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Données sensibles
+*.csv
+*.xlsx
+*.json
+!requirements.txt
+
+# Modèles (optionnel - décommentez si vous ne voulez pas versionner les modèles)
+# models/*.pkl
+# models/*.joblib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
