@@ -10,7 +10,7 @@ ENV/
 .venv
 
 # Jupyter Notebook
-.ipynb_checkpoints
+*.ipynb
 
 # Données sensibles
 *.csv
