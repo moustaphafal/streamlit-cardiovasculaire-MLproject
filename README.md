@@ -2,6 +2,8 @@
 
 Application Streamlit pour prédire le risque de maladies cardiovasculaires à l'aide d'un modèle de **Régression Logistique**.
 
+Lien vers le site : [https://cardiovasculaire-mlproject.streamlit.app/](https://cardiovasculaire-mlproject.streamlit.app/)
+
 ## 📋 Description
 
 Cette application web permet de prédire le risque de maladies cardiovasculaires d'un patient basé sur différents paramètres médicaux, démographiques et résultats de tests d'effort. Elle utilise un modèle de **Régression Logistique** entraîné sur le dataset `heart.csv`.
