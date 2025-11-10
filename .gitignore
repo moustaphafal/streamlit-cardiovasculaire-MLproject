@@ -13,7 +13,6 @@ ENV/
 *.ipynb
 
 # Données sensibles
-*.csv
 *.xlsx
 *.json
 !requirements.txt
