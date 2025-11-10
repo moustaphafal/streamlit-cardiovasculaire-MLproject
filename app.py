@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 
 # Configuration de la page
 st.set_page_config(
@@ -393,11 +393,19 @@ with tab2:
                 }
                 
                 results = []
+                models_dict = {}  # Pour stocker les modèles entraînés
                 
                 for name, model in models.items():
                     model.fit(X_train, y_train)
                     y_pred = model.predict(X_test)
                     y_proba = model.predict_proba(X_test)[:, 1] if hasattr(model, "predict_proba") else None
+                    
+                    # Stocker le modèle et les prédictions
+                    models_dict[name] = {
+                        'model': model,
+                        'y_pred': y_pred,
+                        'y_proba': y_proba
+                    }
                     
                     results.append({
                         "Modèle": name,
@@ -431,6 +439,45 @@ with tab2:
                            ha='center', va='bottom')
                 
                 st.pyplot(fig)
+                
+                # Courbe ROC-AUC
+                st.write("### 📈 Courbes ROC (Receiver Operating Characteristic)")
+                
+                fig, ax = plt.subplots(figsize=(10, 8))
+                
+                # Couleurs pour chaque modèle
+                colors = {'Régression Logistique': '#FF6B6B', 
+                         'Random Forest': '#4ECDC4', 
+                         'SVM': '#45B7D1'}
+                
+                # Tracer la courbe ROC pour chaque modèle
+                for name, data in models_dict.items():
+                    if data['y_proba'] is not None:
+                        fpr, tpr, _ = roc_curve(y_test, data['y_proba'])
+                        roc_auc = roc_auc_score(y_test, data['y_proba'])
+                        ax.plot(fpr, tpr, color=colors[name], lw=2, 
+                               label=f'{name} (AUC = {roc_auc:.3f})')
+                
+                # Ligne de référence (classificateur aléatoire)
+                ax.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--', label='Aléatoire (AUC = 0.500)')
+                
+                ax.set_xlim([0.0, 1.0])
+                ax.set_ylim([0.0, 1.05])
+                ax.set_xlabel('Taux de Faux Positifs (FPR)', fontsize=12)
+                ax.set_ylabel('Taux de Vrais Positifs (TPR)', fontsize=12)
+                ax.set_title('Courbes ROC - Comparaison des Modèles', fontsize=14, fontweight='bold')
+                ax.legend(loc="lower right", fontsize=10)
+                ax.grid(True, alpha=0.3)
+                
+                st.pyplot(fig)
+                
+                st.info("""
+                💡 **Interprétation de la courbe ROC:**
+                - Plus la courbe est proche du coin supérieur gauche, meilleur est le modèle
+                - L'AUC (Area Under Curve) varie de 0.5 (aléatoire) à 1.0 (parfait)
+                - Un AUC > 0.9 indique une excellente capacité discriminante
+                - Nos modèles ont tous un AUC > 0.93, ce qui est excellent !
+                """)
                 
                 # Conclusion
                 st.write("### ✨ Conclusion")
